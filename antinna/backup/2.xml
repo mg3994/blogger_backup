@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:defaultwidgetversion='2' b:layoutsversion='3' b:responsive='true' expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale'
+    xmlns='http://www.w3.org/1999/xhtml'
+    xmlns:b='http://www.google.com/2005/gml/b' 
+    xmlns:data='http://www.google.com/2005/gml/data' 
+    xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+    <script>
+        cookieOptions = {
+            close: &quot;Got it!&quot;,
+            learn: &quot;Privacy Policy&quot;,
+            link: &quot;<data:blog.canonicalHomepageUrl/>p/privacy-policy.html&quot;
+        };
+    </script>
+    
+    <meta content='width=device-width, initial-scale=1' name='viewport'/>
+    <b:include data='blog' name='all-head-content'/>
+    
+    <title><data:blog.pageName/> | <data:blog.title/></title>
+
+    <meta content='website' property='og:type'/>
+    <meta content='IN-HR' name='geo.region'/>
+    <meta content='+918607573994' name='contact.phone'/>
+    
+    <link expr:href='data:blog.homepageUrl.canonical' expr:title='data:messages.home' rel='home'/>
+    <link expr:href='data:blog.homepageUrl.canonical path "search"' expr:title='data:messages.search' rel='search'/>
+    
+    <b:if cond='!data:blog.adultContent'>
+        <meta content='general' name='rating'/>
+    </b:if>
+    <b:if cond='data:blog.adultContent'>
+        <meta content='adult' name='rating'/>
+    </b:if>
+    
+    <b:tag cond='!data:blog.isMobileRequest and data:view.url == data:view.url.canonical' expr:href='data:view.url params {m: 1}' media='only screen and (max-width: 640px)' name='link' rel='alternate'/>
+    <b:tag cond='data:view.isMultipleItems and data:widgets.Blog.first.posts[0].featuredImage' expr:href='data:widgets.Blog.first.posts[0].featuredImage resizeImage 1600' name='link' rel='image_src'/>
+    <b:tag cond='data:view.isSingleItem and data:view.featuredImage' expr:href='data:view.featuredImage resizeImage 1600' name='link' rel='image_src'/>
+
+    <!-- External Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+    <b:skin><![CDATA[
+        /* --- CSS Theme Variables --- */
+        :root {
+            --primary: #006b2c;
+            --primary-container: #00873a;
+            --on-primary: #ffffff;
+            --on-primary-container: #f7fff2;
+            --primary-fixed: #7ffc97;
+            --primary-fixed-dim: #62df7d;
+            --secondary: #006d30;
+            --secondary-container: #92f5a4;
+            --on-secondary-container: #007233;
+            --background: #f9f9ff;
+            --on-background: #111c2d;
+            --surface: #f9f9ff;
+            --surface-container-low: #f0f3ff;
+            --surface-container-lowest: #ffffff;
+            --on-surface: #111c2d;
+            --on-surface-variant: #3e4a3d;
+            --outline: #6e7b6c;
+            --outline-variant: #bdcaba;
+            --error-container: #ffdad6;
+            --on-error-container: #93000a;
+            
+            /* Layout variables matching original layout setup */
+            --max-width: 1280px;
+            --margin-mobile: 16px;
+            --margin-desktop: 64px;
+            --gutter: 24px;
+            --stack-sm: 8px;
+            --stack-md: 16px;
+            --stack-lg: 32px;
+            --radius-default: 0.25rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            --radius-full: 9999px;
+        }
+
+        /* --- Global Setup --- */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--background); 
+            color: var(--on-surface);
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+        *, *:before, *:after { box-sizing: inherit; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; height: auto; display: block; }
+        input:focus { outline: none; }
+        button { border: none; background: none; cursor: pointer; padding: 0; font-family: inherit; }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* --- Layout Containers --- */
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--margin-mobile);
+            padding-right: var(--margin-mobile);
+        }
+
+        /* --- Reusable Components --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, var(--secondary-container), transparent 50%), 
+                        radial-gradient(circle at bottom left, #e7eeff, transparent 50%);
+        }
+        .btn-primary-gradient {
+            background: linear-gradient(to bottom, #16a34a, #15803d);
+            color: var(--on-primary);
+        }
+
+        /* --- Top Bar Styling --- */
+        .header-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 64px;
+            z-index: 50;
+            background: rgba(249, 249, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-b: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .main-nav {
+            display: none;
+            gap: 24px;
+            font-size: 16px;
+        }
+        .main-nav a {
+            color: var(--on-surface-variant);
+            transition: color 0.2s;
+            padding-bottom: 4px;
+        }
+        .main-nav a.active {
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary);
+        }
+        .main-nav a:hover { color: var(--primary); }
+        
+        .search-bar-inline {
+            display: none;
+            align-items: center;
+            background: var(--surface-container-low);
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(110, 123, 108, 0.1);
+        }
+        .search-bar-inline input {
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            width: 192px;
+            margin-left: 8px;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-actions button {
+            padding: 8px;
+            color: var(--on-surface-variant);
+            transition: color 0.2s;
+        }
+        .nav-actions button:hover { color: var(--primary); }
+
+        /* --- Main Context Setup --- */
+        main { padding-top: 64px; }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            position: relative;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.1; }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 896px;
+            margin: 0 auto;
+        }
+        .hero-content h1 {
+            font-size: 36px;
+            line-height: 44px;
+            font-weight: 700;
+            color: var(--on-background);
+            margin-bottom: var(--stack-md);
+            letter-spacing: -0.02em;
+        }
+        .hero-content h1 span { color: var(--primary); }
+        .hero-content p {
+            font-size: 18px;
+            line-height: 28px;
+            color: var(--on-surface-variant);
+            margin-bottom: var(--stack-lg);
+            max-width: 672px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-search-wrapper {
+            border-radius: var(--radius-full);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            max-width: 672px;
+            margin: 0 auto;
+        }
+        .hero-search-wrapper .input-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+        }
+        .hero-search-wrapper input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            padding: 12px 0;
+            margin-left: 12px;
+        }
+        .hero-search-wrapper button {
+            border-radius: var(--radius-full);
+            padding: 12px 32px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .hero-search-wrapper button:hover { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .hero-search-wrapper button:active { transform: scale(0.95); }
+
+        .hero-features {
+            margin-top: var(--stack-lg);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--stack-md);
+        }
+        .feature-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-surface-variant);
+        }
+        .feature-tag .material-symbols-outlined { color: var(--primary); }
+
+        /* --- Grid Categories --- */
+        .section-padding { padding-top: var(--stack-lg); padding-bottom: var(--stack-lg); }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: var(--stack-lg);
+        }
+        .section-title span { color: var(--primary); font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; }
+        .section-title h2 { font-size: 24px; font-weight: 600; color: var(--on-surface); margin: 4px 0 0 0; }
+        .view-all-btn { color: var(--primary); font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 4px; }
+        .view-all-btn:hover { text-decoration: underline; }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gutter);
+        }
+        .category-card {
+            position: relative;
+            height: 320px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s;
+        }
+        .category-card:hover { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .category-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .category-card:hover img { transform: scale(1.05); }
+        .category-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--stack-md);
+            color: #ffffff;
+        }
+        .category-overlay h3 { font-size: 24px; font-weight: 600; margin: 0; }
+        .category-overlay p { font-size: 14px; margin: 4px 0 0 0; opacity: 0.8; }
+
+        /* --- Promo Banner Section --- */
+        .promo-banner {
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+            border-radius: 16px;
+            padding: var(--stack-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--stack-lg);
+            align-items: center;
+        }
+        .promo-text-side { width: 100%; }
+        .promo-badge {
+            background: var(--secondary-container);
+            color: var(--on-secondary-container);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: var(--stack-md);
+        }
+        .promo-text-side h2 { font-size: 24px; font-weight: 600; margin: 0 0 var(--stack-sm) 0; }
+        .promo-text-side p { font-size: 16px; margin: 0 0 var(--stack-lg) 0; opacity: 0.9; }
+        .promo-actions { display: flex; gap: 16px; }
+        .btn-light { background: var(--on-primary-container); color: var(--primary-container); font-size: 14px; font-weight: 500; padding: 12px 24px; border-radius: var(--radius-xl); transition: background 0.2s; }
+        .btn-light:hover { background: #ffffff; }
+        .btn-outline-light { border: 1px solid var(--on-primary-container); color: var(--on-primary-container); font-size: 14px; font-weight: 500; padding: 12px 24px; border-radius: var(--radius-xl); transition: background 0.2s; }
+        .btn-outline-light:hover { background: rgba(255,255,255,0.1); }
+        
+        .promo-img-side { width: 100%; max-width: 320px; position: relative; }
+        .promo-img-holder {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            padding: 16px;
+            border-radius: 16px;
+            transform: rotate(3deg);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .promo-img-holder img { border-radius: var(--radius-lg); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+        /* --- Products Carousel/Grid --- */
+        .bg-carousel { background-color: var(--surface-container-low); }
+        .carousel-controls { display: flex; gap: 8px; }
+        .carousel-controls button {
+            padding: 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--outline);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .carousel-controls button:hover { background: rgba(222, 232, 255, 0.5); }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gutter);
+        }
+        .product-card {
+            border-radius: var(--radius-xl);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .product-img-box {
+            position: relative;
+            aspect-ratio: 1/1;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: #ffffff;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .product-img-box img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; }
+        .product-card:hover .product-img-box img { transform: scale(1.05); }
+        .badge-abs {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            padding: 4px 8px;
+            border-radius: var(--radius-default);
+            font-size: 10px;
+            font-weight: 700;
+            z-index: 10;
+        }
+        .badge-new { background: var(--secondary-container); color: var(--on-secondary-container); }
+        .badge-sale { background: var(--error-container); color: var(--on-error-container); }
+        
+        .product-info { flex: 1; }
+        .product-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .product-cat { font-size: 12px; color: var(--on-surface-variant); }
+        .product-rating { display: flex; align-items: center; gap: 2px; color: var(--secondary); font-size: 12px; }
+        .product-title { font-size: 14px; font-weight: 700; color: var(--on-surface); margin: 0 0 8px 0; }
+        .product-price { font-size: 24px; font-weight: 600; color: var(--primary); margin: 0; }
+        .product-price span { font-size: 12px; color: var(--on-surface-variant); text-decoration: line-through; margin-left: 8px; }
+        
+        .btn-add-cart {
+            margin-top: 16px;
+            width: 100%;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px;
+            border-radius: var(--radius-lg);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-add-cart:hover { background: var(--primary); color: #ffffff; }
+
+        /* --- Central Call to Action --- */
+        .cta-banner {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            height: 384px;
+            display: flex;
+            align-items: center;
+        }
+        .cta-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .cta-overlay { position: absolute; inset: 0; background: rgba(0, 107, 44, 0.4); backdrop-filter: blur(2px); }
+        .cta-content { position: relative; z-index: 10; padding: var(--stack-lg); max-width: 576px; color: #ffffff; }
+        .cta-content h2 { font-size: 36px; line-height: 44px; margin: 0 0 var(--stack-md) 0; }
+        .cta-content p { font-size: 18px; line-height: 28px; margin: 0 0 var(--stack-lg) 0; opacity: 0.9; }
+        .cta-buttons { display: flex; flex-wrap: wrap; gap: var(--stack-md); }
+        .cta-buttons button { padding: 16px 32px; border-radius: var(--radius-xl); font-size: 14px; font-weight: 500; transition: transform 0.2s; }
+        .cta-buttons button:first-child:hover { transform: scale(1.05); }
+        .cta-buttons button.btn-outline-transparent { border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.2); color: #ffffff; }
+        .cta-buttons button.btn-outline-transparent:hover { background: rgba(255,255,255,0.3); }
+
+        /* --- Footer Styles --- */
+        footer {
+            padding-top: var(--stack-lg);
+            padding-bottom: var(--stack-lg);
+            background: var(--surface-container-lowest);
+            border-top: 1px solid rgba(189, 202, 186, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: var(--stack-md);
+        }
+        .footer-brand h4 { font-size: 24px; font-weight: 700; color: var(--primary); margin: 0 0 var(--stack-sm) 0; }
+        .footer-brand p { font-size: 12px; color: var(--on-surface-variant); margin: 0 0 var(--stack-md) 0; max-width: 320px; line-height: 1.5; }
+        .footer-socials { display: flex; gap: 16px; }
+        .footer-socials a { color: var(--on-surface-variant); transition: color 0.2s; }
+        .footer-socials a:hover { color: var(--primary); }
+        
+        .footer-links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--stack-lg);
+            width: 100%;
+        }
+        .footer-column h5 { font-size: 14px; font-weight: 700; color: var(--on-surface); margin: 0 0 var(--stack-md) 0; }
+        .footer-column ul { list-style: none; padding: 0; margin: 0; }
+        .footer-column ul li { margin-bottom: 8px; font-size: 12px; }
+        .footer-column ul li a { color: var(--on-surface-variant); transition: color 0.2s; }
+        .footer-column ul li a:hover { color: var(--primary); }
+
+        .copyright-bar {
+            padding: 16px 0;
+            text-align: center;
+            border-top: 1px solid rgba(189, 202, 186, 0.1);
+            background: var(--surface-container-lowest);
+            font-size: 12px;
+            color: rgba(17, 28, 45, 0.6);
+        }
+
+        /* --- Native Media Queries (Handling Tailwind Breakpoints) --- */
+        @media (min-width: 576px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 768px) {
+            .container { padding-left: var(--margin-desktop); padding-right: var(--margin-desktop); }
+            .main-nav, .search-bar-inline { display: flex; }
+            .hero-content h1 { font-size: 48px; line-height: 56px; }
+            .categories-grid { grid-template-columns: repeat(3, 1fr); }
+            .promo-banner { flex-direction: row; justify-content: space-between; }
+            .promo-text-side { width: 50%; }
+            .promo-img-side { width: 33.333%; }
+            footer { flex-direction: row; justify-content: space-between; align-items: start; }
+            .footer-links-grid { grid-template-columns: repeat(3, 1fr); width: auto; }
+        }
+
+        @media (min-width: 1024px) {
+            .products-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    ]]></b:skin>
+</head>
+<body>
+
+    <!-- TopNavBar -->
+    <header class='header-wrap'>
+        <div class='container header-container'>
+            <div class='nav-left'>
+                <span class='logo'>Antinna</span>
+                <nav class='main-nav'>
+                    <a class='active' href='#'>Home</a>
+                    <a href='#'>Antennas</a>
+                    <a href='#'>Repair Kits</a>
+                    <a href='#'>Support</a>
+                </nav>
+            </div>
+            <div class='nav-right'>
+                <div class='search-bar-inline'>
+                    <span class='material-symbols-outlined'>search</span>
+                    <input placeholder='Search hardware...' type='text'/>
+                </div>
+                <div class='nav-actions'>
+                    <button><span class='material-symbols-outlined'>shopping_cart</span></button>
+                    <button><span class='material-symbols-outlined'>person</span></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class='relative hero-gradient section-padding hero-section'>
+            <div class='hero-bg'>
+                <img alt='Advanced hardware background' src='https://lh3.googleusercontent.com/aida-public/AB6AXuBxBGlYWZLaY0cF9nh1MlqB7CLMRYrsqnLeKdrxnhh5Dx2NEBj9JZTTErmssDB3DktwsWoaiZyYoi4lkKP4mudDK8Wqxp2Ib9y0v_ewhiUXgMPqWDx7bjsb6OicGY7-CpUP9M-gbnrG04D1DAn4wldkDL0oZ2imcWV8cEn78Zt__WVPVXpS-__Nqndr8WOKn5busNzknsFdrQD62QXm2RNmfusRXq3YTx8MLDmr0sIOXyx3ee_z_F1YHySofA5PUJzt9qA8hDWi8NY'/>
+            </div>
+            <div class='container hero-content'>
+                <h1>Precision Hardware for the <span>Connected World</span></h1>
+                <p>Explore our curated collection of high-performance antennas, professional repair kits, and industrial-grade tools.</p>
+                
+                <!-- Glassmorphism Search Bar -->
+                <div class='glass-card hero-search-wrapper'>
+                    <div class='input-box'>
+                        <span class='material-symbols-outlined' style='color: var(--primary);'>search</span>
+                        <input placeholder='Search for SKU, model, or tool...' type='text'/>
+                    </div>
+                    <button class='btn-primary-gradient'>Find Parts</button>
+                </div>
+
+                <div class='hero-features'>
+                    <div class='feature-tag'>
+                        <span class='material-symbols-outlined' style='font-variation-settings: &quot;FILL&quot; 1;'>verified</span>
+                        <span>Certified Hardware</span>
+                    </div>
+                    <div class='feature-tag'>
+                        <span class='material-symbols-outlined' style='font-variation-settings: &quot;FILL&quot; 1;'>local_shipping</span>
+                        <span>Global Express Shipping</span>
+                    </div>
+                    <div class='feature-tag'>
+                        <span class='material-symbols-outlined' style='font-variation-settings: &quot;FILL&quot; 1;'>support_agent</span>
+                        <span>Expert Support</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Categories Grid -->
+        <section class='section-padding'>
+            <div class='container'>
+                <div class='section-header'>
+                    <div class='section-title'>
+                        <span>Department</span>
+                        <h2>Shop by Category</h2>
+                    </div>
+                    <a class='view-all-btn' href='#'>View All <span class='material-symbols-outlined' style='font-size:14px;'>arrow_forward</span></a>
+                </div>
+                
+                <div class='categories-grid'>
+                    <!-- Hardware -->
+                    <div class='category-card'>
+                        <img alt='Advanced Hardware' src='https://lh3.googleusercontent.com/aida-public/AB6AXuDDuYb9s7TTGKNUXxB0avzqTu6jIbvg87LmFJwqXtKwZX7ckVocvjqsLRLevERiHR-uBS5giIADPTEvuiEl9WUdLrFR_4xSYK9VDdPlGxDaVmM5-QobLlIYBnr34LtJSwb0w9m0mcaF9pU-BNUlhbVVb9zKDmcKAPtE_1qXV_PSuyXwHEA3oc4mu_JdyaJVl5b8I6B658XRTSvLN1ou9mO88MlHMvCl_EWzPETeERpzZxLcKwdoAzuj8ME9YbFua63fPf-mZSeqKIU'/>
+                        <div class='category-overlay'>
+                            <h3>Advanced Hardware</h3>
+                            <p>Antennas &amp; Signal Boosters</p>
+                        </div>
+                    </div>
+                    <!-- Tools -->
+                    <div class='category-card'>
+                        <img alt='Precision Tools' src='https://lh3.googleusercontent.com/aida-public/AB6AXuCKKywViuFbep-Cp_bbGqW0Sol6z4TEu_vblBWroWMUKhO_aSscMLckc193_IMEL7rYrOhXJA5rcX0P7CmuqxVzLsMMPkKaQly3aBtVpUrWI6S5QuTbmIa64wysaOQO_pIOlbS5NYEgThyRJNHh0Gx6orBajwPaFWTExOH-MBzP3ASfzxjmtV4CqWmGjXVqnbgCNOTl0fA__zyNlwYd3lUPCuCy6BLrUnQblbwiGl2MxLSXxRcLTksyLslH322oQDbJMwC-rOS1cGE'/>
+                        <div class='category-overlay'>
+                            <h3>Precision Tools</h3>
+                            <p>Calibrated Measurement Gear</p>
+                        </div>
+                    </div>
+                    <!-- Repair Kits -->
+                    <div class='category-card'>
+                        <img alt='Repair Kits' src='https://lh3.googleusercontent.com/aida-public/AB6AXuCAi93shr9pDzhzYga0jAMv1xXSufps2f3hnHLU9W1pJdKsObtfIujsztnGmSCilRB03mj1bqWpZqlUYO065VVV9ATcrQe0cTqiv-C947-dhueqgr_SWelkDo446geOoU-elPzUxNk7Xxv1LNHQHmkAulfxd8uk-xN6lQswlz6dnWrsNBpdqTlrCjJBdl1nF-CVhEOx9cUs0_HFdzCkiSRYbzepZh_yf1-rKfdDy9GlgmmChhr55GILtN5o1gHhYAtHKiLAxdzMt40'/>
+                        <div class='category-overlay'>
+                            <h3>Repair Kits</h3>
+                            <p>All-in-one Solution Sets</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Promotional Banner -->
+        <section class='section-padding'>
+            <div class='container'>
+                <div class='promo-banner'>
+                    <div class='promo-text-side'>
+                        <span class='promo-badge'>Professional Services</span>
+                        <h2>Struggling with a repair? Let our experts handle it.</h2>
+                        <p>Book a certified technician today for a diagnostic or full repair. We use genuine Antinna parts for every service.</p>
+                        <div class='promo-actions'>
+                            <button class='btn-light'>Book Service</button>
+                            <button class='btn-outline-light'>Learn More</button>
+                        </div>
+                    </div>
+                    <div class='promo-img-side'>
+                        <div class='promo-img-holder'>
+                            <img alt='Technician repairing telecommunications equipment' src='https://lh3.googleusercontent.com/aida-public/AB6AXuBLZA7MiHHSzAM-8cLl34wkUDvNhSPgD-kPGsTejGL17ON5ELpUmhIb9BWD32eVRKWKBgojQPzpq_nqrqE8dnAy_zq-cB_apnn0XJj1Grt6qe8n7qhnF4zSBz1M2ZctTPtcr02KXBrCwfKHBrJ4sAQQe31W8qyYFQmi18kMyufrfSg-gCIZN5wwEAI68bhO__SELRY1-vD6Em-NlMklZ2A81nnsmlZP0ru7XWtbauZ5EYb_9Vpu5bovaud1itL8JqpCHxZ0GQJzDVg'/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trending Products Container -->
+        <section class='section-padding bg-carousel'>
+            <div class='container'>
+                <div class='section-header'>
+                    <h2>Trending Hardware</h2>
+                    <div class='carousel-controls'>
+                        <button><span class='material-symbols-outlined'>chevron_left</span></button>
+                        <button><span class='material-symbols-outlined'>chevron_right</span></button>
+                    </div>
+                </div>
+                
+                <div class='products-grid'>
+                    <!-- Product Card 1 -->
+                    <div class='glass-card product-card'>
+                        <div class='product-img-box'>
+                            <span class='badge-abs badge-new'>NEW</span>
+                            <img alt='SignalCore Pro X-200' src='https://lh3.googleusercontent.com/aida-public/AB6AXuC6hRI6yZu97TSyuwMxp6SYNPWry1CPvZT-KtBI5Ib3pMQmFlaBs933C9inJqsZYmsm1wO65roekVhN0nDti6fr3TFMRl5UMiKduMzoJln77dju-RKHc2QRzNuqMK_UjjXCcD6FegskHvunQfcK17-L2SNM8YBuVMPWcLVcQtyude07Tr9stgh4fMV8BRNO5lP8ZG3pwRHSt4l0T7SOCRplMaKBXbKFjCAELcE8Ew-dHsK3OSCDZafukoTM44_ugI83xXoSCJ4m-eU'/>
+                        </div>
+                        <div class='product-info'>
+                            <div class='product-meta'>
+                                <span class='product-cat'>Antennas</span>
+                                <div class='product-rating'>
+                                    <span class='material-symbols-outlined' style='font-size:14px; font-variation-settings: &quot;FILL&quot; 1;'>star</span>
+                                    <span>4.9</span>
+                                </div>
+                            </div>
+                            <h3 class='product-title'>SignalCore Pro X-200</h3>
+                            <p class='product-price'>$129.00</p>
+                        </div>
+                        <button class='btn-add-cart'>
+                            <span class='material-symbols-outlined' style='font-size:16px;'>add_shopping_cart</span> Add to Cart
+                        </button>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class='glass-card product-card'>
+                        <div class='product-img-box'>
+                            <img alt='Master Tech Repair Kit' src='https://lh3.googleusercontent.com/aida-public/AB6AXuDIfX0BL7wziwq6sv5sCt_-RaxkTINnEKbV3GYv-mEMuCXtcEkiz2nL_0QBxkxQonYl67F10_PfFs6csJY5xu1vPp9KbnZBfxC_tLyDxfYefnMeV5uWA7uLlsFKFrXRQXwzmpOmL3U45h0Iydgsbq5-NH88KpSmF3ln_na3gxjIxNyfV2jEoZ8ysvFKzgBfTPmTaXhcCA79Tjqt6uRkAePjeYyyVgqy71do0PFlQ74DxvCwra0ETNmOqPZQNT-vwLNYz96EVxvCJR8'/>
+                        </div>
+                        <div class='product-info'>
+                            <div class='product-meta'>
+                                <span class='product-cat'>Repair Kits</span>
+                                <div class='product-rating'>
+                                    <span class='material-symbols-outlined' style='font-size:14px; font-variation-settings: &quot;FILL&quot; 1;'>star</span>
+                                    <span>5.0</span>
+                                </div>
+                            </div>
+                            <h3 class='product-title'>Master Tech Repair Kit</h3>
+                            <p class='product-price'>$54.50</p>
+                        </div>
+                        <button class='btn-add-cart'>
+                            <span class='material-symbols-outlined' style='font-size:16px;'>add_shopping_cart</span> Add to Cart
+                        </button>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class='glass-card product-card'>
+                        <div class='product-img-box'>
+                            <img alt='SolderMaster 9000' src='https://lh3.googleusercontent.com/aida-public/AB6AXuDdJhTyoTL4q1I35Y5ug-alQcLF2RT-HgclunP5xbhqX1yekF7wQ4po0TWWukEdYVOPiIUm51OSFz_XXSCFssGIezLH5gc6hNJRVzE9MZkn27GEyyOTbkRdw_l9UIfgjHMlMB7FfsIXj6snNMcXsufU3-XeF4IJIbbfY8rw1Gd08lDSa2XWzSukx4ThnrA-cWxPFB0oaUZD5MEBzI3Vutu4jBg74yqSShRDBydaO0DGV10fwNp8upDbi27hSyfCZcKaIIk58D6gAY4'/>
+                        </div>
+                        <div class='product-info'>
+                            <div class='product-meta'>
+                                <span class='product-cat'>Tools</span>
+                                <div class='product-rating'>
+                                    <span class='material-symbols-outlined' style='font-size:14px; font-variation-settings: &quot;FILL&quot; 1;'>star</span>
+                                    <span>4.8</span>
+                                </div>
+                            </div>
+                            <h3 class='product-title'>SolderMaster 9000</h3>
+                            <p class='product-price'>$210.00</p>
+                        </div>
+                        <button class='btn-add-cart'>
+                            <span class='material-symbols-outlined' style='font-size:16px;'>add_shopping_cart</span> Add to Cart
+                        </button>
+                    </div>
+
+                    <!-- Product Card 4 -->
+                    <div class='glass-card product-card'>
+                        <div class='product-img-box'>
+                            <span class='badge-abs badge-sale'>SALE</span>
+                            <img alt='Gold-Plated Connector Kit' src='https://lh3.googleusercontent.com/aida-public/AB6AXuA4FZL4IYYT1XQIw1NTLvtz_w0eC3sIfSl0SSUxvmZqI4sA14eLS-OcW4AkcZGwoJLEPBg3k-dVS29LppNKXs1YY2SUIueKyoi7UOEIGVo-fAig9oIQHkZFPAzByXSs0M3x_OR1BQNVJUGaOdWf90ExC8wCZDAm7Jwm-Efa-VFByzgED20gM3_CqEXxhDTlQSLcVjCcDL6NtYD-B4vTAubXNbLbI3OfAVR9L1-D6yKZJb06n-4m6aP69Gqx8CiTr3GklMsYYK5vb4o'/>
+                        </div>
+                        <div class='product-info'>
+                            <div class='product-meta'>
+                                <span class='product-cat'>Hardware</span>
+                                <div class='product-rating'>
+                                    <span class='material-symbols-outlined' style='font-size:14px; font-variation-settings: &quot;FILL&quot; 1;'>star</span>
+                                    <span>4.7</span>
+                                </div>
+                            </div>
+                            <h3 class='product-title'>Gold-Plated Connector Kit</h3>
+                            <p class='product-price'>$19.99 <span>$29.00</span></p>
+                        </div>
+                        <button class='btn-add-cart'>
+                            <span class='material-symbols-outlined' style='font-size:16px;'>add_shopping_cart</span> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Engineered Section -->
+        <section class='section-padding'>
+            <div class='container'>
+                <div class='cta-banner'>
+                    <img class='cta-bg' alt='Manufacturing facility' src='https://lh3.googleusercontent.com/aida-public/AB6AXuDg51hN8VBp7soeZofjqNnAWuitA0cbD9-IvqEecoakTXJE6VseUuRUNiqjCjWz1y9KZpPUUXK4dQoQdWYSyQdKUnIKeSVYzh_mZkYyIDExANU9G384qZ7FTxbOnkK-qWKE2dhYxjfMh0Q2WE20Bjqxa9PN79-87IxSRDsVQWNcfOS7rE89OKZ8VyW8K1TDh92NkC0Xivl349uwzybgacWCOZovooLz5fmWwpPkAmNG6o4ZfK7gMHM9DwbeYjdQ49IhYd4RKQBWqR0'/>
+                    <div class='cta-overlay'></div>
+                    <div class='cta-content'>
+                        <h2>Engineered for Reliability</h2>
+                        <p>Whether you're an OEM manufacturer or a DIY enthusiast, we provide the precision you need to succeed.</p>
+                        <div class='cta-buttons'>
+                            <button class='btn-primary-gradient'>Book a Repair</button>
+                            <button class='btn-outline-transparent'>Wholesale Inquiry</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Element -->
+    <footer>
+        <div class='container footer-brand'>
+            <h4>Antinna</h4>
+            <p>Your trusted partner in precision telecommunications hardware and professional electronic repair solutions.</p>
+            <div class='footer-socials'>
+                <a href='#'><span class='material-symbols-outlined'>social_leaderboard</span></a>
+                <a href='#'><span class='material-symbols-outlined'>alternate_email</span></a>
+                <a href='#'><span class='material-symbols-outlined'>share</span></a>
+            </div>
+        </div>
+        <div class='container footer-links-grid'>
+            <div class='footer-column'>
+                <h5>Shop</h5>
+                <ul>
+                    <li><a href='#'>All Antennas</a></li>
+                    <li><a href='#'>Repair Kits</a></li>
+                    <li><a href='#'>Precision Tools</a></li>
+                    <li><a href='#'>Refurbished Gear</a></li>
+                </ul>
+            </div>
+            <div class='footer-column'>
+                <h5>Support</h5>
+                <ul>
+                    <li><a href='#'>Repair Guides</a></li>
+                    <li><a href='#'>Order Tracking</a></li>
+                    <li><a href='#'>Return Policy</a></li>
+                    <li><a href='#'>Contact Us</a></li>
+                </ul>
+            </div>
+            <div class='footer-column'>
+                <h5>Legal</h5>
+                <ul>
+                    <li><a href='#'>Privacy Policy</a></li>
+                    <li><a href='#'>Terms of Service</a></li>
+                    <li><a href='#'>Shipping Info</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    
+    <div class='copyright-bar'>
+        © 2024 Antinna Hardware &amp; Repair. All rights reserved.
+    </div>
+
+    <!-- Hidden Main Blogger Section Required by Platform Engine -->
+    <div style='display:none;'>
+        <b:section id='main' maxwidgets='1' showelement='yes'>
+            <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog'/>
+        </b:section>
+    </div>
+
+</body>
+</html>
