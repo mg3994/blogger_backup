@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopEase - Vanilla CSS Navbar</title>
+    <!-- Using FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --bg-white: #ffffff;
+            --bg-gray: #f9fafb;
+            --border-color: #e5e7eb;
+            --nav-height: 70px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --breakpoint-lg: 1024px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg-gray);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .navbar {
+            height: var(--nav-height);
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Left side: Menu toggle & Logo */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-icon {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* Desktop Nav Links */
+        .nav-links {
+            display: none; /* Hidden on mobile */
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            background: #f3f4ff;
+            color: var(--primary-color);
+        }
+
+        .actions-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background-color: var(--bg-gray);
+            color: var(--primary-color);
+        }
+
+        .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid white;
+        }
+
+        /* Expandable Search (Desktop) */
+        .search-wrapper {
+            display: none; /* Mobile uses overlay */
+            align-items: center;
+            background: var(--bg-gray);
+            border-radius: 20px;
+            padding: 2px;
+            width: 40px;
+            transition: width 0.4s ease;
+            overflow: hidden;
+            border: 1px solid transparent;
+        }
+
+        .search-wrapper.active {
+            width: 240px;
+            background: white;
+            border-color: var(--primary-color);
+        }
+
+        .search-input {
+            border: none;
+            background: transparent;
+            outline: none;
+            padding: 0 10px;
+            width: 0;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .search-wrapper.active .search-input {
+            width: 100%;
+            opacity: 1;
+        }
+
+        #mobile-search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: white;
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            transform: translateY(-100%);
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        #mobile-search-overlay.active {
+            transform: translateY(0);
+        }
+
+        .mobile-search-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .mobile-full-input {
+            flex: 1;
+            border: none;
+            background: var(--bg-gray);
+            padding: 10px 15px;
+            border-radius: 10px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        /* Sidebar Styling */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1400;
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100%;
+            background: white;
+            z-index: 1500;
+            transform: translateX(-100%);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-link {
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: var(--bg-gray);
+            color: var(--primary-color);
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Responsive Breakpoints */
+        @media (min-width: 1024px) {
+            .nav-links { display: flex; }
+            .menu-toggle { display: none; }
+            .search-wrapper { display: flex; }
+            .mobile-search-trigger { display: none; }
+        }
+
+        .no-scroll {
+            overflow: hidden;
+        }
+
+        main {
+            padding: calc(var(--nav-height) + 2rem) 1.5rem 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .placeholder-card {
+            background: white;
+            height: 200px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            
+            <div class="nav-left">
+                <button class="icon-btn menu-toggle" id="open-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="#" class="logo-section">
+                    <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+                    <span class="logo-text">ShopEase</span>
+                </a>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">Home</a>
+                    <a href="#" class="nav-link">Shop</a>
+                    <a href="#" class="nav-link">Hot Deals</a>
+                </div>
+            </div>
+
+            <div class="actions-group">
+                <!-- Desktop Expandable Search -->
+                <div class="search-wrapper" id="desktop-search-container">
+                    <button class="icon-btn" id="desktop-search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <input type="text" class="search-input" placeholder="Search products...">
+                </div>
+
+                <!-- Mobile Search Trigger -->
+                <button class="icon-btn mobile-search-trigger" id="trigger-mobile-search">
+                    <i class="fas fa-search"></i>
+                </button>
+
+                <!-- Cart -->
+                <button class="icon-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge">2</span>
+                </button>
+
+                <!-- Notifications -->
+                <button class="icon-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" style="background: #ef4444; width: 8px; height: 8px; top: 10px; right: 10px;"></span>
+                </button>
+
+                <!-- Profile -->
+                <button class="icon-btn">
+                    <img src="https://placehold.co/100x100/4f46e5/ffffff?text=JD" class="user-avatar" alt="Avatar">
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Overlay (Preventing layout shift) -->
+        <div id="mobile-search-overlay">
+            <div class="mobile-search-content">
+                <button class="icon-btn" id="close-mobile-search">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <input type="text" class="mobile-full-input" id="mobile-search-input" placeholder="What are you looking for?">
+            </div>
+        </div>
+    </nav>
+
+    <div class="sidebar-overlay" id="overlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span style="font-weight: 700; color: var(--primary-color);">Menu Navigation</span>
+            <button class="icon-btn" id="close-sidebar"><i class="fas fa-times"></i></button>
+        </div>
+        <a href="#" class="sidebar-link"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-shopping-bag"></i> Shop</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-percent"></i> Hot Deals</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-heart"></i> Wishlist</a>
+        <a href="#" class="sidebar-link"><i class="fas fa-user"></i> My Account</a>
+        <div style="margin-top: auto; padding: 1.5rem;">
+            <button style="width:100%; background: var(--primary-color); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Log Out</button>
+        </div>
+    </div>
+
+    <main>
+        <h1 style="margin-bottom: 1rem;">Welcome Back</h1>
+        <p style="margin-bottom: 2rem; color: var(--text-muted);">Try resizing the window while the mobile sidebar is open to see the auto-close logic.</p>
+        <div class="placeholder-card"></div>
+        <div class="placeholder-card"></div>
+        <div class="placeholder-card"></div>
+    </main>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const openSidebarBtn = document.getElementById('open-sidebar');
+        const closeSidebarBtn = document.getElementById('close-sidebar');
+
+        const desktopSearch = document.getElementById('desktop-search-container');
+        const desktopSearchBtn = document.getElementById('desktop-search-btn');
+        const desktopInput = desktopSearch.querySelector('input');
+
+        const mobileSearchOverlay = document.getElementById('mobile-search-overlay');
+        const triggerMobileSearch = document.getElementById('trigger-mobile-search');
+        const closeMobileSearch = document.getElementById('close-mobile-search');
+        const mobileInput = document.getElementById('mobile-search-input');
+
+        
+        // Helper to close all mobile menus
+        function resetMobileMenus() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            mobileSearchOverlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
+
+        // Toggle Sidebar
+        function toggleSidebar(show) {
+            if (show) {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                document.body.classList.add('no-scroll');
+            } else {
+                resetMobileMenus();
+            }
+        }
+
+        openSidebarBtn.addEventListener('click', () => toggleSidebar(true));
+        closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+        overlay.addEventListener('click', () => toggleSidebar(false));
+
+        // Desktop Search
+        desktopSearchBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isActive = desktopSearch.classList.contains('active');
+            if (!isActive) {
+                desktopSearch.classList.add('active');
+                desktopInput.focus();
+            } else if (!desktopInput.value.trim()) {
+                desktopSearch.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!desktopSearch.contains(e.target)) {
+                desktopSearch.classList.remove('active');
+            }
+        });
+
+        // Mobile Search
+        triggerMobileSearch.addEventListener('click', () => {
+            mobileSearchOverlay.classList.add('active');
+            document.body.classList.add('no-scroll');
+            setTimeout(() => mobileInput.focus(), 300);
+        });
+
+        closeMobileSearch.addEventListener('click', resetMobileMenus);
+
+        
+        // The Fix: Monitor window resize to clean up mobile states
+        window.addEventListener('resize', () => {
+            // If window is wider than 1024px (our desktop breakpoint)
+            if (window.innerWidth >= 1024) {
+                // If any mobile drawer is active, reset them
+                if (sidebar.classList.contains('open') || mobileSearchOverlay.classList.contains('active')) {
+                    resetMobileMenus();
+                    console.log("Resize detected: Closing mobile menus to prevent UI ghosting.");
+                }
+            }
+        });
+
+        // ESC Key handling
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') resetMobileMenus();
+        });
+    </script>
+</body>
+</html>
