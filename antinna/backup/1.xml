@@ -111,6 +111,7 @@
       &quot;@type&quot;: &quot;PostalAddress&quot;, 
       &quot;streetAddress&quot;: &quot;H.No. 42, Village:- Todi&quot;, 
       &quot;addressLocality&quot;: &quot;Charkhi Dadri&quot;, 
+      &quot;addressRegion&quot;: &quot;Haryana&quot;, 
       &quot;postalCode&quot;: &quot;127310&quot;, 
       &quot;addressCountry&quot;: &quot;IN&quot;
     },
