@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garware - Hardware & Repairs</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --accent: #f97316;
+            --accent-dark: #ea580c;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --bg-body: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --nav-height: 70px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .navbar {
+            height: var(--nav-height);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0 1rem;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dark);
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        }
+
+        .desktop-links {
+            display: none;
+            gap: 6px;
+            margin-left: 20px;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .actions-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.95);
+        }
+
+        .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 16px;
+            height: 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid white;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar-desktop {
+            display: none;
+            width: 0;
+            overflow: hidden;
+            background: #f1f5f9;
+            border-radius: 20px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+            height: 38px;
+            border: 1px solid transparent;
+        }
+
+        .search-bar-desktop.active {
+            width: 260px;
+            padding: 0 15px;
+            border-color: var(--border);
+            background: white;
+            margin-right: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .search-bar-desktop input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        /* Floating Search Suggestions Box */
+        .search-suggestions {
+            position: absolute;
+            top: 48px;
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1050;
+        }
+
+        .search-suggestions.active {
+            display: flex;
+        }
+
+        .suggestion-header {
+            padding: 10px 15px;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .suggestion-item {
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background: #f0f9ff;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .suggestion-category {
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: #e0f2fe;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        #mobile-search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            background: white;
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            transform: translateY(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+        }
+
+        #mobile-search-overlay.active {
+            transform: translateY(0);
+        }
+
+        .search-overlay-inner {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+        }
+
+        .search-input-mobile {
+            flex: 1;
+            border: 1px solid var(--border);
+            background: #f1f5f9;
+            padding: 10px 16px;
+            border-radius: 20px;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .search-input-mobile:focus {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        /* Mobile suggestions scroll panel */
+        .mobile-suggestions {
+            position: absolute;
+            top: var(--nav-height);
+            left: 0;
+            width: 100%;
+            background: white;
+            max-height: calc(100vh - var(--nav-height));
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--border);
+            display: none;
+        }
+
+        .mobile-suggestions.active {
+            display: block;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1400;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: white;
+            z-index: 1500;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            background: white;
+            z-index: 1500;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-drawer.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-items-container {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .cart-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-light);
+            text-align: center;
+            gap: 12px;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            align-items: center;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+
+        .cart-qty-ctrl {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .qty-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            background: #f8fafc;
+        }
+
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .checkout-btn:hover {
+            background: var(--accent-dark);
+        }
+
+        main {
+            margin-top: var(--nav-height);
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem 1rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 80% 20%, rgba(2, 132, 199, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 850;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-repair {
+            background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
+        }
+
+        .btn-repair:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
+        }
+
+        /* Responsive Grid & Product Cards */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
+        }
+
+        .product-badge {
+            align-self: flex-start;
+            background: #f0f9ff;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 750;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .product-desc {
+            font-size: 0.88rem;
+            color: var(--text-light);
+            margin-bottom: 1.25rem;
+        }
+
+        .product-action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .add-to-cart-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .add-to-cart-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .modal.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .modal-title {
+            font-weight: 800;
+            font-size: 1.25rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            outline: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 2500;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 4rem 1rem 2rem;
+            margin-top: 5rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.85rem;
+        }
+
+        .footer-col ul li a {
+            color: inherit;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #1e293b;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 1024px) {
+            .desktop-links {
+                display: flex;
+            }
+            #menu-toggle {
+                display: none;
+            }
+            #mobile-search-btn {
+                display: none;
+            }
+            .search-bar-desktop {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <!-- Hamburger Trigger -->
+                <button class="icon-btn" id="menu-toggle" aria-label="Open navigation menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <a href="#" class="logo">
+                    <div class="logo-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1-2.83-2.83l-3.94 3.6Z"/><path d="m14.7 6.3 5.4 5.4"/><path d="M21 21v-3a2 2 0 0 0-2-2h-3"/><path d="M7.5 10.5 2 16l4.5 4.5 5.5-5.5"/><path d="m10.5 7.5 4 4"/><path d="M11 6c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2Z"/><path d="M9 11v-1l1.5-1.5"/></svg>
+                    </div>
+                    Garware
+                </a>
+                <div class="desktop-links">
+                    <a href="#" class="nav-item active" id="nav-home">Home</a>
+                    <a href="#products-section" class="nav-item">Products</a>
+                    <a href="#" class="nav-item" onclick="openBookingModal('General')">Book Repairs</a>
+                </div>
+            </div>
+
+            <!-- Action Buttons Group (Fixed order: Search, Cart, Notification, Profile) -->
+            <div class="actions-group">
+                <!-- Search Icon First (Triggers sliding text-input on desktop, Overlay on mobile) -->
+                <div class="search-wrapper">
+                    <div class="search-bar-desktop" id="desktop-search-container">
+                        <input type="text" placeholder="Search pipes, tools, services..." id="desktop-search-input">
+                    </div>
+                    <button class="icon-btn" id="search-trigger-btn" aria-label="Toggle search bar">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                    <!-- Floating Dropdown Suggestions on Desktop -->
+                    <div class="search-suggestions" id="desktop-suggestions">
+                        <div class="suggestion-header">Suggestions</div>
+                        <div id="desktop-suggestions-list"></div>
+                    </div>
+                </div>
+
+                <!-- Shopping Cart Action -->
+                <button class="icon-btn" id="cart-trigger-btn" aria-label="Open Shopping Cart">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span class="badge" id="cart-badge" style="display: none;">0</span>
+                </button>
+
+                <!-- Notifications Panel -->
+                <button class="icon-btn" id="notification-trigger" aria-label="Notifications">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span class="badge" style="background:#ef4444">1</span>
+                </button>
+
+                <!-- User Profile Action -->
+                <button class="icon-btn" aria-label="User Profile" style="border: 2px solid var(--border); overflow: hidden; padding: 0;">
+                    <img src="https://placehold.co/40x40/0284c7/white?text=G" alt="User Avatar" style="width:100%; height:100%">
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Overlay (Prevents shifting other icons) -->
+        <div id="mobile-search-overlay">
+            <div class="search-overlay-inner">
+                <button class="icon-btn" id="close-search-mobile" aria-label="Close search overlay">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </button>
+                <input type="text" class="search-input-mobile" id="mobile-input" placeholder="Search products or services...">
+                <button class="icon-btn" id="clear-search-btn" aria-label="Clear search input">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <!-- Mobile Suggestions list below input -->
+            <div class="mobile-suggestions" id="mobile-suggestions">
+                <div class="suggestion-header" style="padding: 15px;">Suggestions</div>
+                <div id="mobile-suggestions-list"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Drawer Navigation Backdrop Overlays -->
+    <div class="sidebar-overlay" id="overlay"></div>
+
+    <!-- Mobile Sidebar Menu drawer -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="logo" style="color:var(--primary)">
+                <div class="logo-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1-2.83-2.83l-3.94 3.6Z"/></svg>
+                </div>
+                Garware
+            </span>
+            <button class="icon-btn" id="close-sidebar" aria-label="Close navigation menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="sidebar-link active">Home</a>
+            <a href="#products-section" class="sidebar-link" onclick="closeAll()">Shop Products</a>
+            <a href="#" class="sidebar-link" style="color:var(--accent)" onclick="openBookingModal('General')">Book Repair Slot</a>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Drawer sliding panel -->
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3 style="font-weight: 800; font-size: 1.2rem;">Your Cart</h3>
+            <button class="icon-btn" id="close-cart" aria-label="Close cart panel">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="cart-items-container" id="cart-container">
+            <!-- Dynamic Cart elements or Empty State -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-summary-row">
+                <span>Total:</span>
+                <span id="cart-total-price">₹0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="handleCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Expert Hardware & Reliable Repairs</h1>
+            <p>High-quality plumbing fits, heavy agriculture irrigation gear, and professional electrical motor winding services.</p>
+            <a href="#" class="btn-repair" onclick="openBookingModal('General')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Book a Repair Time
+            </a>
+        </section>
+
+        <!-- Products Storefront -->
+        <div class="section-header" id="products-section">
+            <h2>Featured Hardware Products</h2>
+        </div>
+        <div class="grid-layout" id="products-grid">
+            <!-- Interactive Product cards loaded dynamically -->
+        </div>
+
+        <!-- Repair Services Category List -->
+        <div class="section-header">
+            <h2>Professional Repairs</h2>
+        </div>
+        <div class="grid-layout">
+            <div class="product-card">
+                <span class="product-badge" style="background:#fef3c7; color:#d97706;">Winding Repair</span>
+                <h3 class="product-title">Electric Motor Winding</h3>
+                <p class="product-desc">Heavy copper rewinding for single and three-phase farm water pump motors with solid warranty.</p>
+                <div class="product-action-row">
+                    <span class="product-price" style="font-size: 1rem; color: var(--primary);">Slots Open</span>
+                    <button class="submit-btn" style="width:auto; padding: 8px 16px; font-size: 0.85rem;" onclick="openBookingModal('Motor Winding')">Book Slot</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="product-badge" style="background:#ecfdf5; color:#059669;">Fitting Services</span>
+                <h3 class="product-title">Household Plumbing Setup</h3>
+                <p class="product-desc">Flawless PVC laying, tap installation, repair of leaks and agricultural layout optimization.</p>
+                <div class="product-action-row">
+                    <span class="product-price" style="font-size: 1rem; color: var(--primary);">On-Demand</span>
+                    <button class="submit-btn" style="width:auto; padding: 8px 16px; font-size: 0.85rem;" onclick="openBookingModal('Plumbing Fitting')">Book Slot</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Booking Dialog Modal -->
+    <div class="modal" id="booking-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title" id="booking-title">Book Repair Appointment</span>
+                <button class="icon-btn" onclick="closeBookingModal()" aria-label="Close dialog">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="booking-form" onsubmit="handleBookingSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="book-service">Select Service</label>
+                        <select class="form-select" id="book-service" required>
+                            <option value="General">General Consultation & Repair</option>
+                            <option value="Motor Winding">Submersible Motor Rewinding</option>
+                            <option value="Plumbing Fitting">Plumbing Laying & Fittings</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="book-name">Your Full Name</label>
+                        <input type="text" class="form-input" id="book-name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="book-phone">Phone Number</label>
+                        <input type="tel" class="form-input" id="book-phone" placeholder="9876543210" pattern="[0-9]{10}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="book-date">Preferable Date</label>
+                        <input type="date" class="form-input" id="book-date" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Schedule Repair</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container for dynamic Toast alerts -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 style="display:flex; align-items:center; gap:8px;">
+                    <div class="logo-box" style="width:28px; height:28px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="m14.7 6.3 5.4 5.4"/></svg>
+                    </div>
+                    Garware Hardware
+                </h4>
+                <p style="font-size: 0.9rem; margin-top: 10px;">Your local partner for plumbing, agriculture supplies, and professional motor rewind repairs since 1998.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Legal Policies</h4>
+                <ul>
+                    <li><a href='/p/privacy-policy.html'>Privacy Policy</a></li>
+                    <li><a href='/p/terms-conditions.html'>Terms &amp; Conditions</a></li>
+                    <li><a href='/p/refund-cancellation.html'>Refund Policy</a></li>
+                    <li><a href='/p/disclaimer.html'>Disclaimer</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Social Links</h4>
+                <ul>
+                    <li><a href='https://www.youtube.com/@Antinna' target="_blank" rel="noopener">YouTube Channel</a></li>
+                    <li><a href='https://www.instagram.com/antinna.yt' target="_blank" rel="noopener">Instagram</a></li>
+                    <li><a href='https://www.facebook.com/profile.php?id=100082961891641' target="_blank" rel="noopener">Facebook</a></li>
+                    <li><a href='https://play.google.com/store/apps/dev?id=7417258411166270372' target="_blank" rel="noopener">Play Store Apps</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Garware Hardware & Repairs. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA LAYER ---
+        const PRODUCTS = [
+            { id: 1, name: "Astral PVC Rigid Pipe (3m)", desc: "High pressure bearing plumbing setup pipe for housing.", category: "Plumbing", price: 240 },
+            { id: 2, name: "Finolex 1.5 Sqmm Cooper Cable", desc: "Long-lasting, fire retardant copper wire for connections.", category: "Electrical", price: 1250 },
+            { id: 3, name: "Submersible Pump Starter Panel", desc: "Automatic dry-run controller for agriculture borewell.", category: "Electrical", price: 2100 },
+            { id: 4, name: "Heavy Drip Irrigation Pipe (100m)", desc: "Specially formulated layout for agricultural water distribution.", category: "Plumbing", price: 1800 },
+            { id: 5, name: "Supreme Brass Gate Valve", desc: "Corrosion proof, premium threaded water control valve.", category: "Plumbing", price: 390 }
+        ];
+
+        let CART = [];
+
+        // --- DOM ELEMENTS ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const searchOverlayMobile = document.getElementById('mobile-search-overlay');
+        const desktopSearchContainer = document.getElementById('desktop-search-container');
+        
+        const desktopInput = document.getElementById('desktop-search-input');
+        const mobileInput = document.getElementById('mobile-input');
+        
+        const desktopSuggestions = document.getElementById('desktop-suggestions');
+        const desktopSuggestionsList = document.getElementById('desktop-suggestions-list');
+        const mobileSuggestions = document.getElementById('mobile-suggestions');
+        const mobileSuggestionsList = document.getElementById('mobile-suggestions-list');
+
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartBadge = document.getElementById('cart-badge');
+        const cartContainer = document.getElementById('cart-container');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+
+        const bookingModal = document.getElementById('booking-modal');
+        const bookingForm = document.getElementById('booking-form');
+
+        // --- STREAMING_CHUNK:Implementing event listeners and interface controls... ---
+        
+        // Synchronized Search Input Implementation
+        function syncSearch(value) {
+            // Keep both desktop and mobile inputs in absolute lockstep
+            desktopInput.value = value;
+            mobileInput.value = value;
+
+            performSearch(value);
+        }
+
+        desktopInput.addEventListener('input', (e) => syncSearch(e.target.value));
+        mobileInput.addEventListener('input', (e) => syncSearch(e.target.value));
+
+        // Search engine lookup logic
+        function performSearch(query) {
+            const cleanQuery = query.toLowerCase().trim();
+            if (!cleanQuery) {
+                desktopSuggestions.classList.remove('active');
+                mobileSuggestions.classList.remove('active');
+                return;
+            }
+
+            const matched = PRODUCTS.filter(prod => 
+                prod.name.toLowerCase().includes(cleanQuery) || 
+                prod.category.toLowerCase().includes(cleanQuery)
+            );
+
+            renderSuggestions(matched, desktopSuggestionsList);
+            renderSuggestions(matched, mobileSuggestionsList);
+
+            if (matched.length > 0) {
+                if (window.innerWidth >= 1024) {
+                    desktopSuggestions.classList.add('active');
+                } else {
+                    mobileSuggestions.classList.add('active');
+                }
+            } else {
+                desktopSuggestions.classList.remove('active');
+                mobileSuggestions.classList.remove('active');
+            }
+        }
+
+        // Render matched queries
+        function renderSuggestions(matches, listContainer) {
+            listContainer.innerHTML = '';
+            matches.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'suggestion-item';
+                row.innerHTML = `
+                    <span class="suggestion-title">${item.name}</span>
+                    <span class="suggestion-category">${item.category}</span>
+                `;
+                row.onclick = () => {
+                    closeAll();
+                    syncSearch('');
+                    // Scroll to item or highlight it
+                    const elem = document.getElementById(`product-${item.id}`);
+                    if (elem) {
+                        elem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        elem.style.boxShadow = '0 0 15px rgba(2, 132, 199, 0.6)';
+                        setTimeout(() => elem.style.boxShadow = '', 2000);
+                    }
+                };
+                listContainer.appendChild(row);
+            });
+        }
+
+        // Drawer controllers
+        function closeAll() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            searchOverlayMobile.classList.remove('active');
+            cartDrawer.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+            desktopSearchContainer.classList.remove('active');
+            desktopSuggestions.classList.remove('active');
+            mobileSuggestions.classList.remove('active');
+        }
+
+        // Desktop Search Button Toggle
+        document.getElementById('search-trigger-btn').onclick = (e) => {
+            if (window.innerWidth < 1024) {
+                searchOverlayMobile.classList.add('active');
+                document.body.classList.add('no-scroll');
+                setTimeout(() => mobileInput.focus(), 300);
+            } else {
+                desktopSearchContainer.classList.toggle('active');
+                if (desktopSearchContainer.classList.contains('active')) {
+                    desktopInput.focus();
+                } else {
+                    desktopSuggestions.classList.remove('active');
+                }
+            }
+        };
+
+        document.getElementById('close-search-mobile').onclick = closeAll;
+        document.getElementById('clear-search-btn').onclick = () => {
+            syncSearch('');
+            mobileInput.focus();
+        };
+
+        // Navigation Sidebar toggles
+        document.getElementById('menu-toggle').onclick = () => {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            document.body.classList.add('no-scroll');
+        };
+
+        document.getElementById('close-sidebar').onclick = closeAll;
+        overlay.onclick = closeAll;
+
+        // Shopping Cart Dialog Toggles
+        document.getElementById('cart-trigger-btn').onclick = () => {
+            cartDrawer.classList.add('active');
+            overlay.classList.add('active');
+            document.body.classList.add('no-scroll');
+        };
+        document.getElementById('close-cart').onclick = closeAll;
+
+        // Auto Close Mobile Drawers and search overlays if window expands past break points
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                closeAll();
+            }
+        });
+
+        // Close interfaces via Escape Key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAll();
+        });
+
+        // --- STREAMING_CHUNK:Coding dynamic storefront render and shopping cart managers... ---
+
+        // Dynamic Loading of Storefront Products
+        function loadProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            PRODUCTS.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.id = `product-${item.id}`;
+                card.innerHTML = `
+                    <div>
+                        <span class="product-badge">${item.category}</span>
+                        <h3 class="product-title">${item.name}</h3>
+                        <p class="product-desc">${item.desc}</p>
+                    </div>
+                    <div class="product-action-row">
+                        <span class="product-price">₹${item.price}</span>
+                        <button class="add-to-cart-btn" onclick="addToCart(${item.id})" aria-label="Add ${item.name} to Cart">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Cart State Modifiers
+        function addToCart(productId) {
+            const productObj = PRODUCTS.find(p => p.id === productId);
+            const exists = CART.find(item => item.id === productId);
+
+            if (exists) {
+                exists.qty++;
+            } else {
+                CART.push({ ...productObj, qty: 1 });
+            }
+
+            renderCart();
+            showToast(`${productObj.name} added to cart!`);
+        }
+
+        function updateCartQty(productId, delta) {
+            const cartItem = CART.find(item => item.id === productId);
+            if (!cartItem) return;
+
+            cartItem.qty += delta;
+            if (cartItem.qty <= 0) {
+                CART = CART.filter(item => item.id !== productId);
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            cartContainer.innerHTML = '';
+            let total = 0;
+            let count = 0;
+
+            if (CART.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="cart-empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        <p>Your shopping cart is currently empty.</p>
+                    </div>
+                `;
+                cartBadge.style.display = 'none';
+            } else {
+                CART.forEach(item => {
+                    total += item.price * item.qty;
+                    count += item.qty;
+
+                    const card = document.createElement('div');
+                    card.className = 'cart-item';
+                    card.innerHTML = `
+                        <div class="cart-item-details">
+                            <h4 class="cart-item-title">${item.name}</h4>
+                            <p class="cart-item-price">₹${item.price} each</p>
+                            <div class="cart-qty-ctrl">
+                                <button class="qty-btn" onclick="updateCartQty(${item.id}, -1)">-</button>
+                                <span style="font-weight:700;">${item.qty}</span>
+                                <button class="qty-btn" onclick="updateCartQty(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                    `;
+                    cartContainer.appendChild(card);
+                });
+
+                cartBadge.textContent = count;
+                cartBadge.style.display = 'flex';
+            }
+
+            cartTotalPrice.textContent = `₹${total}`;
+        }
+
+        function handleCheckout() {
+            if (CART.length === 0) {
+                showToast("Your cart is empty!", "error");
+                return;
+            }
+            CART = [];
+            renderCart();
+            closeAll();
+            showToast("Order placed successfully!");
+        }
+
+        // --- STREAMING_CHUNK:Coding scheduling modal mechanics and alerts... ---
+
+        // Interactive Scheduler modal controls
+        function openBookingModal(defaultService) {
+            closeAll();
+            if (defaultService) {
+                document.getElementById('book-service').value = defaultService;
+            }
+            // Set minimum date selector tomorrow onwards
+            const dateInput = document.getElementById('book-date');
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInput.min = tomorrow.toISOString().split('T')[0];
+
+            bookingModal.classList.add('active');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeBookingModal() {
+            bookingModal.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+            bookingForm.reset();
+        }
+
+        function handleBookingSubmit(event) {
+            event.preventDefault();
+            const service = document.getElementById('book-service').value;
+            const name = document.getElementById('book-name').value;
+            const date = document.getElementById('book-date').value;
+
+            closeBookingModal();
+            showToast(`Repair scheduled for ${name} on ${date}!`);
+        }
+
+        // Custom notification toaster (Eliminates standard browser alert)
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const card = document.createElement('div');
+            card.className = 'toast';
+            card.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>${message}</span>
+            `;
+            container.appendChild(card);
+
+            setTimeout(() => {
+                card.style.animation = 'none';
+                card.style.opacity = '0';
+                setTimeout(() => card.remove(), 300);
+            }, 3000);
+        }
+
+        // Load page elements initially
+        window.onload = function() {
+            loadProducts();
+            renderCart();
+        }
+    </script>
+</body>
+</html>
